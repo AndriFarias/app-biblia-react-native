@@ -1,28 +1,67 @@
-import { useEffect, useState } from "react";
-import { getChapter } from "../services/books.http.service";
-import { FlatList, Text, StyleSheet,ScrollView} from "react-native";
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, StyleSheet } from 'react-native';
+import { getChapter } from '../services/books.http.service';
 
-export default function Chapter({ route }){
+const Verse = ({ number, text }) => (
+    <Text style={styles.verse}>{number}. {text}</Text>
+);
+
+export default function Chapter({ route }) {
     const { abbrev, cap } = route.params;
-    const [chapter, setChapter] = useState(null)
-    
-    useEffect(()=>{
-        getChapter(abbrev, cap).then(setChapter)
-    }, [])
-   
-    return chapter && chapter.verses ? (
-        <ScrollView>
+    const [chapter, setChapter] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        getChapter(abbrev, cap)
+            .then(data => {
+                setChapter(data);
+                setIsLoading(false);
+            });
+    }, [abbrev, cap]);
+
+    if (isLoading) {
+        return <ActivityIndicator size="large" color="#0000ff" />;
+    }
+
+    if (!chapter || !chapter.verses) {
+        return null;
+    }
+
+    return (
+        <ScrollView contentContainerStyle={styles.container}>
             {chapter.verses.map((verse, index) => 
-                <Text key={index} style={styles.versiculos}>{verse.number}. {verse.text}</Text>
+                <Verse key={index} number={verse.number} text={verse.text} />
             )}
         </ScrollView>
-    ) : null;
+    );
 }
 
 const styles = StyleSheet.create({
-    versiculos: {
+    container: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    verse: {
         textAlign: "center",
-        padding:12,
+        padding: 12,
         fontSize: 18,
+        color: '#333333',
+        marginBottom: 5,
+        borderWidth: 1,
+        borderColor: '#CCCCCC',
+        borderRadius: 10,
+        backgroundColor: '#FFFFFF',
+        width: '90%',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        marginTop: 5,
     },
 });
