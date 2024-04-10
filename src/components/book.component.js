@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, FlatList, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import {searchAllBooks} from "../services/books.http.service"
 
-export default function Book({ navigation }){
+export default function Book({ route,navigation }){
     const [books, setBooks] = useState([])
     const [isLoading, setIsLoading] = useState(true);
+    const { testament } = route.params;
     const numColumns = 2; 
     useEffect(()=>{
         searchAllBooks().then((data)=> {
-            setBooks(data);
+            const testamentBooks = data.filter(book => book.testament === testament);
+            setBooks(testamentBooks);
             setIsLoading(false);
         })
     }, [])

@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Book from './src/components/book.component';
 import BookDetails from './src/components/bookDetails.component';
 import Chapter from './src/components/chapter.component';
+import Testament from './src/components/testament.component';
 
 const Stack = createStackNavigator();
 
@@ -34,9 +35,10 @@ export default function App() {
           },
         }}
       >
-        <Stack.Screen name="Bíblia Digital" component={Book} />
+        <Stack.Screen name="Livros" component={Book} />
         <Stack.Screen name="Capítulos" component={BookDetails} />
         <Stack.Screen name="Versículos" component={Chapter} />
+        <Stack.Screen name="Bíblia Digital" component={Testament} />
       </Stack.Navigator>
     </NavigationContainer>
   );
